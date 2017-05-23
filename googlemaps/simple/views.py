@@ -108,7 +108,8 @@ def getCityCoordinates(city):
     return location
 
 def index(request):
-    city = "Saint-Hubert"
+    city = "Montreal"
+    #city = "Brossard"
     location, coors = getOSMCityID(city)
     #location = getCityCoordinates(city)
     template = loader.get_template('simple/index.html')
@@ -117,3 +118,13 @@ def index(request):
 
     return HttpResponse(template.render(context, request))
 
+def process_text(request):
+    article_text = ''
+    if request.method == 'POST':
+        if "article_text" in request.POST:
+            article_text = request.POST["article_text"]
+
+            print("Text=",article_text)
+    context = {'article_text': article_text}
+    template = loader.get_template('simple/text_process.html')
+    return HttpResponse(template.render(context, request))

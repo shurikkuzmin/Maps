@@ -1,4 +1,9 @@
-<h1>Hello, world!</h1>
+<h1>Enter your text:</h1>
+<form action="{% url 'text-process' %}" method="post">
+  {% csrf_token %}
+  <textarea rows="4" name="article_text" style="width: 100%" id="ArticleForm"></textarea>
+  <button>Submit</button>
+</form>
 <div id="map" style="height: 100%"></div>
 <script>
   function initMap() {
@@ -11,7 +16,7 @@
     {
       center: { lat: {{ location.lat}}, lng: {{ location.lng }} },
       scrollwheel: false,
-      zoom: 12
+      zoom: 8
     });
 
     {% for path in paths %}
