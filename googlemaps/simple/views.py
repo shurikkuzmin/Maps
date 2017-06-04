@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from django.template import loader
 import urllib.request
 import json
+import nltk
+import numpy
+from . import places
 
 def getOSMCityID(city):
     url = "http://overpass-api.de/api/interpreter?data=[out:json];area[name=\"" + city + "\"];foreach(out;);"
@@ -108,23 +111,50 @@ def getCityCoordinates(city):
     return location
 
 def index(request):
-    city = "Montreal"
     #city = "Brossard"
-    location, coors = getOSMCityID(city)
     #location = getCityCoordinates(city)
     template = loader.get_template('simple/index.html')
-    
-    context = {'location': location, 'paths' : coors}
+    context = {}
 
     return HttpResponse(template.render(context, request))
 
 def process_text(request):
     article_text = ''
+    cities = []
     if request.method == 'POST':
         if "article_text" in request.POST:
             article_text = request.POST["article_text"]
 
-            print("Text=",article_text)
-    context = {'article_text': article_text}
+            print("Text = ",article_text)
+
+            text = nltk.word_tokenize(article_text)
+            chunks = nltk.ne_chunk(nltk.pos_tag(text))
+
+            #article_text = chunks.pprint()
+            for chunk in chunks:
+                if len(chunk) == 1:
+                    if (chunk.label() == "GPE" or chunk.label() == "GEO") and (chunk[0][1] == "NNP"):
+                        cities.append(chunk[0][0])
+                        print("Place=", cities[-1]) 
+
+        print("Cities = ", cities)
+
+        db = places.Places()
+        realCities = db.findCities(cities)
+    cities = numpy.array(cities)
+    realCities = cities[numpy.where(realCities == True)]
+    print("Overall cities = ", cities)
+
+    location = []
+    coors = []
+    for city in cities:
+        try:
+            location, coors = getOSMCityID(city)
+        except:
+            # Do nothing 
+            pass
+
+
+    context = {'article_text': article_text, 'geos': cities, 'location': location, 'paths' : coors}
     template = loader.get_template('simple/text_process.html')
     return HttpResponse(template.render(context, request))

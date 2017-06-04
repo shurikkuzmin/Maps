@@ -4,33 +4,3 @@
   <textarea rows="4" name="article_text" style="width: 100%" id="ArticleForm"></textarea>
   <button>Submit</button>
 </form>
-<div id="map" style="height: 100%"></div>
-<script>
-  function initMap() {
-    
-    boundaries = [];
-    polygons = [];
-
-    // Create a map object and specify the DOM element for display.
-    var map = new google.maps.Map(document.getElementById('map'), 
-    {
-      center: { lat: {{ location.lat}}, lng: {{ location.lng }} },
-      scrollwheel: false,
-      zoom: 8
-    });
-
-    {% for path in paths %}
-      boundary = [];
-      {% for node in path %}
-        boundary.push(new google.maps.LatLng({{ node|first }}, {{ node|last }}));
-      {% endfor %}
-      
-      var polygon = new google.maps.Polygon({ paths : boundary });
-      polygon.setMap(map);
-
-      polygons.push(polygon);
-    {% endfor %}
-
-  }
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQxn1ZTFWJlmIb0oWeHwfL8_Sbr7YJvOY&callback=initMap" async defer></script>
