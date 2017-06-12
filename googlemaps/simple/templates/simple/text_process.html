@@ -22,7 +22,7 @@ The system identified the following objects that might be geographical:
       zoom: 8
     });
 
-    {% for path in paths %}
+    /*{% for path in paths %}
       boundary = [];
       {% for node in path %}
         boundary.push(new google.maps.LatLng({{ node|first }}, {{ node|last }}));
@@ -32,7 +32,10 @@ The system identified the following objects that might be geographical:
       polygon.setMap(map);
 
       polygons.push(polygon);
-    {% endfor %}
+    {% endfor %} */
+    var boundaries = {{ boundaries | safe}};
+
+    map.data.addGeoJson(boundaries);
 
   }
 </script>

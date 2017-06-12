@@ -118,9 +118,28 @@ def index(request):
 
     return HttpResponse(template.render(context, request))
 
+def getNominatimCityID(city):
+    url = "http://nominatim.openstreetmap.org/search?q="+urllib.request.quote(city)+"&polygon_geojson=1&format=json"
+    response = urllib.request.urlopen(url)
+    responseBody = response.read()
+    responseJSON = json.loads(responseBody.decode("utf-8"))
+    #boundaries = []
+    coors = []
+    boundaries = {}
+    for obj in responseJSON:
+        if 'type' in obj:
+            print("Type=",obj['type'])
+            if obj['type'] == 'city' or obj['type'] == "administrative":
+                boundary = obj['geojson']
+                print("Nominatim=", boundary)
+                #boundaries.append(json.dumps(boundary))
+    boundaries = {"type" : "Feature", "geometry" : boundary}
+    return boundaries
+
 def process_text(request):
     article_text = ''
     cities = []
+    realCities = []
     if request.method == 'POST':
         if "article_text" in request.POST:
             article_text = request.POST["article_text"]
@@ -145,16 +164,20 @@ def process_text(request):
     realCities = cities[numpy.where(realCities == True)]
     print("Overall cities = ", cities)
 
-    location = []
+    location = {"lat": 50.0, "lng": 50.0}
     coors = []
+    boundaries = []
+    cities = ["Brossard"]
     for city in cities:
         try:
-            location, coors = getOSMCityID(city)
+            #location, coors = getOSMCityID(city)
+            print("City=", city, coors)
+            boundaries = getNominatimCityID(city)
         except:
             # Do nothing 
             pass
 
 
-    context = {'article_text': article_text, 'geos': cities, 'location': location, 'paths' : coors}
+    context = {'article_text': article_text, 'geos': cities, 'location': location, 'paths' : coors, 'boundaries': json.dumps(boundaries)}
     template = loader.get_template('simple/text_process.html')
     return HttpResponse(template.render(context, request))
