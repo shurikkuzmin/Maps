@@ -33,10 +33,19 @@ The system identified the following objects that might be geographical:
 
       polygons.push(polygon);
     {% endfor %} */
-    var boundaries = {{ boundaries | safe}};
+    var boundaries = JSON.parse("{{boundaries | escapejs}}");
 
     map.data.addGeoJson(boundaries);
 
+    for (var i = 0; i < boundaries["features"].length; i++) 
+    {
+      var marker = new google.maps.Marker({
+                        map: map,
+                        animation: google.maps.Animation.DROP,
+                        position: {lat: boundaries["features"][i].lat, lng: boundaries["features"][i].lng},
+                        label: boundaries["features"][i].label,
+                      }); 
+    } 
   }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQxn1ZTFWJlmIb0oWeHwfL8_Sbr7YJvOY&callback=initMap" async defer></script>
