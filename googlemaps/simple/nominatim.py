@@ -1,4 +1,7 @@
-class Places(object):
+import json
+import urllib.request
+
+class Nominatim(object):
     def __init__(self):
       pass
 
@@ -17,14 +20,16 @@ class Places(object):
                 if obj["type"] == "city" or obj["type"] == "administrative":
                     lat = float(obj["lat"])
                     lng = float(obj["lon"])
-                    boundaryJSON = 
-                    {
+                    boundaryJSON = {
                         "geojson" : 
                         {
                             "type" : "Feature", "geometry" : obj["geojson"]                                        
                         },
-                        "lat" : lat, 
-                        "lng" : lng, 
+                        "location" :
+                        {
+                            "lat" : lat, 
+                            "lng" : lng 
+                        },
                         "label" : city
                     }
                     boundary.append(boundaryJSON)
@@ -32,7 +37,6 @@ class Places(object):
         return boundary
 
     def processCities(self, cities):
-        cities = numpy.array(cities)
    
         center = {"lat" : 0.0, "lng" : 0.0}
         coors = []
@@ -41,13 +45,14 @@ class Places(object):
         numCities = int(0)
         for city in cities:
 
-            boundary = getNominatimCityID(city)
+            boundary = self.getNominatimCityID(city)
             if len(boundary) != 0:
                 for bound in boundary:
                     boundariesGeo["features"].append(bound["geojson"])
-                    boundariesInfo
+                    boundariesInfo["labels"].append(bound["label"])
+                    boundariesInfo["locations"].append(bound["location"])
                     center["lat"] = center["lat"] + bound["lat"]
-                    location["lng"] = center["lng"] + bound["lng"]
+                    center["lng"] = center["lng"] + bound["lng"]
                     print("City", city, bound["lat"], bound["lng"])
                     numCities = numCities + 1
         if numCities != 0:
@@ -60,8 +65,9 @@ class Places(object):
         print("Number of Cities = ", numCities)
         
         # Prepare a mega object
-        boundaries = 
-        {
+        boundaries = {
             "geojson" : boundariesGeo,
-            "info" :
+            "info" : boundariesInfo,
+            "center" : center
         }
+        return boundaries

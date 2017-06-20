@@ -17,7 +17,7 @@ The system identified the following objects that might be geographical:
     // Create a map object and specify the DOM element for display.
     var map = new google.maps.Map(document.getElementById('map'), 
     {
-      center: { lat: {{ location.lat}}, lng: {{ location.lng }} },
+      center: {{ result.center}},
       scrollwheel: false,
       zoom: 8
     });
@@ -33,17 +33,19 @@ The system identified the following objects that might be geographical:
 
       polygons.push(polygon);
     {% endfor %} */
-    var boundaries = JSON.parse("{{boundaries | escapejs}}");
+    var boundaries = JSON.parse("{{result.geojson | escapejs}}");
 
     map.data.addGeoJson(boundaries);
 
-    for (var i = 0; i < boundaries["features"].length; i++) 
+
+    var info = JSON.parse("{{result.info | escapejs}}")
+    for (var i = 0; i < info.length; i++) 
     {
       var marker = new google.maps.Marker({
                         map: map,
                         animation: google.maps.Animation.DROP,
-                        position: {lat: boundaries["features"][i].lat, lng: boundaries["features"][i].lng},
-                        label: boundaries["features"][i].label,
+                        position: info[i].location,
+                        label: info[i].label,
                       }); 
     } 
   }
