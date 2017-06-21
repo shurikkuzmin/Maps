@@ -51,9 +51,9 @@ class Nominatim(object):
                     boundariesGeo["features"].append(bound["geojson"])
                     boundariesInfo["labels"].append(bound["label"])
                     boundariesInfo["locations"].append(bound["location"])
-                    center["lat"] = center["lat"] + bound["lat"]
-                    center["lng"] = center["lng"] + bound["lng"]
-                    print("City", city, bound["lat"], bound["lng"])
+                    center["lat"] = center["lat"] + bound["location"]["lat"]
+                    center["lng"] = center["lng"] + bound["location"]["lng"]
+                    print("City", city, bound["location"]["lat"], bound["location"]["lng"])
                     numCities = numCities + 1
         if numCities != 0:
             center["lat"] = center["lat"] / numCities

@@ -43,7 +43,7 @@ def process_text(request):
     cities = numpy.array(cities)
     #realCities = cities[numpy.where(realCities == True)]
 
-    cities = ["Орел"]
+    cities = ["Муром"]
     engine = nominatim.Nominatim()
 
     res = engine.processCities(cities)
