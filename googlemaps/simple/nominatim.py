@@ -43,8 +43,18 @@ class Nominatim(object):
         boundariesGeo = {"type" : "FeatureCollection", "features" : []}
         boundariesInfo = {"labels" : [], "locations" : []}
         numCities = int(0)
-        for city in cities:
 
+        # Prepare a mega object
+        boundaries = {
+            "geojson" : boundariesGeo,
+            "info" : boundariesInfo,
+            "center" : center
+        }
+        
+        if cities == None:
+            return boundaries
+
+        for city in cities:
             boundary = self.getNominatimCityID(city)
             if len(boundary) != 0:
                 for bound in boundary:
@@ -64,10 +74,4 @@ class Nominatim(object):
 
         print("Number of Cities = ", numCities)
         
-        # Prepare a mega object
-        boundaries = {
-            "geojson" : boundariesGeo,
-            "info" : boundariesInfo,
-            "center" : center
-        }
         return boundaries

@@ -2,3 +2,6 @@ Django==1.10.6
 ipython
 nltk
 geograpy
+pymorphy2
+pymorphy2-dicts-ru
+langdetect
