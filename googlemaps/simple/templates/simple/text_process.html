@@ -1,6 +1,9 @@
 You've entered the following text:
 {{ article_text }}
 <br/>
+Switch off boundaries:
+<input type="checkbox" name="layer" value="switch" id="visibility">
+<br/>
 <h4>
 The system identified the following objects that might be geographical: 
 </h4>
@@ -8,6 +11,7 @@ The system identified the following objects that might be geographical:
 <h4>{{ geo }}</h4>
 {% endfor %}
 <div id="map" style="height: 100%"></div>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
   function initMap() {
     
@@ -24,20 +28,8 @@ The system identified the following objects that might be geographical:
       zoom: 4
     });
 
-    /*{% for path in paths %}
-      boundary = [];
-      {% for node in path %}
-        boundary.push(new google.maps.LatLng({{ node|first }}, {{ node|last }}));
-      {% endfor %}
-      
-      var polygon = new google.maps.Polygon({ paths : boundary });
-      polygon.setMap(map);
-
-      polygons.push(polygon);
-    {% endfor %} */
-
     map.data.addGeoJson(resultJSON.geojson);
-
+ 
     for (var i = 0; i < resultJSON.info.labels.length; i++) 
     {
       var marker = new google.maps.Marker({
@@ -46,7 +38,16 @@ The system identified the following objects that might be geographical:
                         position: resultJSON.info.locations[i],
                         label: resultJSON.info.labels[i],
                       }); 
-    } 
-  }
+    }
+
+    $("#visibility").change( function() {
+      if($("#visibility").prop('checked') == true)
+        map.data.setStyle({visible: false});
+      else
+        map.data.setStyle({visible: true});
+    });
+ 
+  };
+
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQxn1ZTFWJlmIb0oWeHwfL8_Sbr7YJvOY&callback=initMap" async defer></script>
