@@ -1,8 +1,16 @@
 You've entered the following text:
 {{ article_text }}
 <br/>
-Switch off boundaries:
-<input type="checkbox" name="layer" value="switch" id="visibility">
+Administrative boundaries:
+<input type="checkbox" name="layer" value="switch" id="admin_visibility">
+<br/>
+<br/>
+Cities boundaries:
+<input type="checkbox" name="layer" value="switch" id="city_visibility">
+<br/>
+<br/>
+Towns/Villages boundaries:
+<input type="checkbox" name="layer" value="switch" id="village_visibility">
 <br/>
 <h4>
 The system identified the following objects that might be geographical: 
@@ -28,8 +36,10 @@ The system identified the following objects that might be geographical:
       zoom: 4
     });
 
-    map.data.addGeoJson(resultJSON.geojson);
- 
+    admins = map.data.addGeoJson(resultJSON.admins);
+    cities = map.data.addGeoJson(resultJSON.cities);
+    villages = map.data.addGeoJson(resultJSON.villages);
+
     for (var i = 0; i < resultJSON.info.labels.length; i++) 
     {
       var marker = new google.maps.Marker({
@@ -37,14 +47,36 @@ The system identified the following objects that might be geographical:
                         animation: google.maps.Animation.DROP,
                         position: resultJSON.info.locations[i],
                         label: resultJSON.info.labels[i],
+                        scrollwheel: true,
+                        scaleControl: true,
                       }); 
     }
 
-    $("#visibility").change( function() {
-      if($("#visibility").prop('checked') == true)
-        map.data.setStyle({visible: false});
+    // map.data.setStyle(function(feature){
+    //   if ((feature.getProperty('visibility') === true) || (feature.getProperty('visibility') === undefined))
+    //     return ({visible: true});
+    //   else
+    //     return ({visible: false});
+    // });
+
+    $("#admin_visibility").change( function() {
+      if($("#admin_visibility").prop('checked') === true)
+        admins.forEach(function(admin) { map.data.overrideStyle(admin, {visible: false}); });
       else
-        map.data.setStyle({visible: true});
+        admins.forEach(function(admin) { map.data.overrideStyle(admin, {visible: true}); });
+    });
+
+    $("#city_visibility").change( function() {
+      if($("#city_visibility").prop('checked') === true)
+        cities.forEach(function(city) { map.data.overrideStyle(city, {visible: false}); });
+      else
+        cities.forEach(function(city) { map.data.overrideStyle(city, {visible: true}); });
+    });
+    $("#village_visibility").change( function() {
+      if($("#village_visibility").prop('checked') === true)
+        villages.forEach(function(village) { map.data.overrideStyle(villages[0], {visible: false}); });
+      else
+        villages.forEach(function(village) { map.data.overrideStyle(villages[0], {visible: true}); });
     });
  
   };
