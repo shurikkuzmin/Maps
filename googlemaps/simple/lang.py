@@ -4,18 +4,22 @@ import pymorphy2
 
 class Analysis(object):
     def __init__(self):
-        self.language = None
+        self.language = "en"
         self.article_text = None
 
     def determineLanguage(self):
         # We need to do something special for Russian language
         if self.article_text == None:
             return
-        self.language = langdetect.detect(self.article_text)
+            try:
+                self.language = langdetect.detect(self.article_text)
+            except:
+                pass
 
     def processText(self):
         if self.article_text == None or self.language == None:
-            return []
+            self.cities = []
+            return
 
         cities = []
 

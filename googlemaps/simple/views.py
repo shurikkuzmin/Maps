@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from django.core import serializers
 import urllib.request
 import json
 import numpy
@@ -30,6 +31,7 @@ def process_text(request):
     result = engine.processCities(cities)
 
     context = {'article_text': article_text, 'geos': cities, 'result': json.dumps(result)}
-    template = loader.get_template('simple/text_process.html')
     
+    template = loader.get_template('simple/text_process.html')
+
     return HttpResponse(template.render(context, request))
