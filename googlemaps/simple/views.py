@@ -5,7 +5,6 @@ from django.template import loader
 from django.core import serializers
 import urllib.request
 import json
-import numpy
 import pymorphy2
 from . import places
 from . import nominatim
