@@ -5,9 +5,9 @@
     // Create a map object and specify the DOM element for display.
     var map = new google.maps.Map(document.getElementById('map'), 
     {
-      center: resultJSON.center,
+      center: {lat: 45.5017, lng : -73.5673},
       scrollwheel: false,
-      zoom: 4
+      zoom: 6
     });
 
     admins = map.data.addGeoJson(resultJSON.admins);
