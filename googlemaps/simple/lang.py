@@ -25,7 +25,7 @@ class Analysis(object):
         cities = []
 
         tokens = nltk.word_tokenize(self.article_text)
-        print("Tokens = ", tokens)
+        #print("Tokens = ", tokens)
         # Special case of Russian
         if self.language == "ru":
             morph = pymorphy2.MorphAnalyzer()
@@ -36,9 +36,8 @@ class Analysis(object):
                     cities.append(item.normal_form)
         else:
             chunks = nltk.ne_chunk(nltk.pos_tag(tokens))
-            print("Chunks=", chunks)
+            #print("Chunks=", chunks)
             for chunk in chunks:
-                print()
                 if len(chunk) == 1:
                     if (chunk.label() == "GPE" or chunk.label() == "GEO") and (chunk[0][1] == "NNP"):
                         cities.append(chunk[0][0])
