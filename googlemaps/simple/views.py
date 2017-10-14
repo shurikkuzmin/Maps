@@ -35,3 +35,10 @@ def process_text(request):
     template = loader.get_template('simple/text_process.html')
 
     return HttpResponse(template.render(context, request))
+
+def jason(request):
+    template = loader.get_template('simple/jason_cavendish.html')
+    context = {}
+
+    return HttpResponse(template.render(context, request))
+

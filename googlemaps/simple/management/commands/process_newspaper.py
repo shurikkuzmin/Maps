@@ -71,7 +71,13 @@ class Command(BaseCommand):
     help = 'Processes the article to include there a map'
 
     def handle(self, *arg, **options):
-        url = "http://montrealgazette.com/travel/checking-in-eastern-townships-farmbb-dishes-up-barn-to-fork-cuisine"
+        #url = "http://montrealgazette.com/travel/checking-in-eastern-townships-farmbb-dishes-up-barn-to-fork-cuisine"
+        #url = "http://montrealgazette.com/travel/checking-in-updated-novotel-is-hot-ticket-to-bell-centre"
+        #url = "http://montrealgazette.com/travel/small-but-mighty-malta-island-nation-just-below-sicily-turning-into-an-increasingly-popular-stopover/wcm/0fe5e05f-5eb7-49a2-b145-7c6ce096a3ee"
+        #url = "http://montrealgazette.com/news/local-news/montreal-elections-coderre-pledges-parity-plante-wonders-what-took-so-long"
+        url = "http://montrealgazette.com/news/local-news/projet-montreal-changes-its-tune-on-cavendish-blvd-extension"
+        #url = "http://montrealgazette.com/news/local-news/projet-montreal-vows-to-transform-pool-parking-lot-into-mount-royal-paradise"
+        #url = "http://montrealgazette.com/news/local-news/projet-montreal-pledges-to-tackle-dangerous-intersections-in-year-1"
         article = GetArticle(url)
         print("Article = ", article)
         Parse(article)
