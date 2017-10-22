@@ -39,11 +39,15 @@ def process_text(request):
 def jason(request):
     template = loader.get_template('simple/jason_cavendish.html')
     context = {}
-
     return HttpResponse(template.render(context, request))
 
 def kevin(request):
     template = loader.get_template('simple/kevin_butteflies.html')
     context = {}
-
     return HttpResponse(template.render(context, request))
+
+def charlie(request):
+    template = loader.get_template('simple/charlie_overdose.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
+
