@@ -7,5 +7,6 @@ urlpatterns = [
     url(r'^jason/$', views.jason, name = 'jason'),
     url(r'^kevin/$', views.kevin, name = 'kevin'),
     url(r'^charlie/$', views.charlie, name = 'charlie'),
-    url(r'^jennifer/$', views.jennifer, name = 'jennifer')
+    url(r'^jennifer/$', views.jennifer, name = 'jennifer'),
+    url(r'^celine/$', views.celine, name = 'celine')
 ]

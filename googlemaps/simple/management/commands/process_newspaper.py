@@ -80,7 +80,8 @@ class Command(BaseCommand):
         #url = "http://montrealgazette.com/news/local-news/projet-montreal-pledges-to-tackle-dangerous-intersections-in-year-1"
         #url = "http://montrealgazette.com/news/local-news/painted-lady-butterflies-experience-remarkable-migration-to-montreal-area"
         #url = "http://montrealgazette.com/news/local-news/fentanyl-deaths-coalition-lashes-out-against-systemic-barriers-as-overdoses-soar-in-montreal"
-        url = "http://montrealgazette.com/life/social-notes-an-f1-grand-prix-fairy-tale-come-true"
+        #url = "http://montrealgazette.com/life/social-notes-an-f1-grand-prix-fairy-tale-come-true"
+        url = "http://montrealgazette.com/opinion/columnists/celine-cooper-montreal-has-much-to-offer-amazon-as-hq2"
         article = GetArticle(url)
         #print("Article = ", article)
         Parse(article)

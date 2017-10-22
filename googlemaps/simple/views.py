@@ -56,4 +56,9 @@ def jennifer(request):
     context = {}
     return HttpResponse(template.render(context, request))
 
+def celine(request):
+    template = loader.get_template('simple/celine_amazon.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
+
 
