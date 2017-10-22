@@ -51,3 +51,9 @@ def charlie(request):
     context = {}
     return HttpResponse(template.render(context, request))
 
+def jennifer(request):
+    template = loader.get_template('simple/jennifer_grandprix.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
+
+
