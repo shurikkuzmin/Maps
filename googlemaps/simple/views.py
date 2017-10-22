@@ -42,3 +42,8 @@ def jason(request):
 
     return HttpResponse(template.render(context, request))
 
+def kevin(request):
+    template = loader.get_template('simple/kevin_butteflies.html')
+    context = {}
+
+    return HttpResponse(template.render(context, request))
