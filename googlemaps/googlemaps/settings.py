@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ["45.62.240.170","shurikkuzmin.pythonanywhere.com","localhost"]
 # Application definition
 
 INSTALLED_APPS = [
+    'django_extensions',
     'simple.apps.SimpleConfig',
     'django.contrib.admin',
     'django.contrib.auth',

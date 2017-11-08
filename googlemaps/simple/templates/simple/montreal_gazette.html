@@ -1,0 +1,6 @@
+<h1>Enter your url:</h1>
+<form action="{% url 'process-gazette' %}" method="post">
+  {% csrf_token %}
+  <input type="text" name="url-montreal-gazette">
+  <button>Submit</button>
+</form>
