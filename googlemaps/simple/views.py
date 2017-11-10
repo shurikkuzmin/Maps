@@ -65,6 +65,7 @@ def process_gazette(request):
     print("URL = ", url_post)
     try:
         article = MontrealGazetteArticle.objects.get(url = url_post)
+        html = article.modified_text
     except MontrealGazetteArticle.DoesNotExist:
         # Get right now the article
 
@@ -111,10 +112,15 @@ def process_gazette(request):
         new_script2.insert_after(new_script)
 
         html = soup.prettify("utf-8")
-        webpage = Template(html)
-       
-        context = Context()
-        return HttpResponse(webpage.render(context))
+        processed_article = MontrealGazetteArticle()
+        processed_article.url = url_post
+        processed_article.original_text = article
+        processed_article.modified_text = html
+        processed_article.save()
+
+    webpage = Template(html)
+    context = Context()
+    return HttpResponse(webpage.render(context))
 
 
     # Analyze url
