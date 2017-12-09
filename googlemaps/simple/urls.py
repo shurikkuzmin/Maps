@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^celine/$', views.celine, name = 'celine'),
     url(r'^montrealgazette/$', views.montreal_gazette, name = 'montreal-gazette'),
     url(r'^montrealgazette/(?P<slug>.*)/$', views.view_montreal_gazette, name = 'view-montreal-gazette'),
-    url(r'^processgazette/$', views.process_gazette, name = 'process-gazette')
+    url(r'^processgazette/$', views.process_gazette, name = 'process-gazette'),
+    url(r'^compensation/$', views.compensation, name = 'compensation'),
+    url(r'^processcompensation/$', views.process_compensation, name = 'process-compensation'),
 ]

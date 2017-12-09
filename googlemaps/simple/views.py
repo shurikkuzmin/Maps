@@ -11,7 +11,7 @@ import bs4
 from . import places
 from . import nominatim
 from . import lang
-
+from . import fit
 import re
 
 from .models import MontrealGazetteArticle
@@ -163,5 +163,29 @@ def celine(request):
     context = {}
     return HttpResponse(template.render(context, request))
 
+def compensation(request):
+    template = loader.get_template('simple/compensation.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
 
+
+def process_compensation(request):
+    
+    salary = request.POST['salary']
+    years = request.POST['years']
+    level = request.POST['level']
+
+    print("Salary = ", salary)
+    print("Years = ", years)
+    print("Level = ", level)
+    levels = ["ceo", "vp", "lead", "professional"]
+    level = levels.index(level)
+
+    approximation = fit.Fit()
+    delay = approximation.predict(salary, years, level)
+
+
+    template = loader.get_template('simple/process_compensation.html')
+    context = {"Delay": delay[0]}
+    return HttpResponse(template.render(context, request))
 

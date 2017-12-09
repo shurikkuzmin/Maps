@@ -6,3 +6,4 @@ pymorphy2-dicts-ru
 langdetect
 beautifulsoup4
 django_extensions
+pandas

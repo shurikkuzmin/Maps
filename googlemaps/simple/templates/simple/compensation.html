@@ -1,0 +1,18 @@
+<form action="{% url 'process-compensation' %}" method="post">
+  {% csrf_token %}
+  Choose the competency level:
+  <select name="level">
+    <option value="ceo">CEO/President</option>
+    <option value="vp">VP</option>
+    <option value="lead">Team Leader</option>
+    <option value="professional">Professional</option>
+  </select>
+  <br/>
+  Salary per year:
+  <input type="number" name="salary" value="70000"/>
+  <br/>
+  Years of service:
+  <input type="number" name="years" value="10"/>
+  <br/>
+  <input type="submit">
+</form>
