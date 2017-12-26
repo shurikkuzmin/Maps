@@ -1,5 +1,7 @@
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
 <form id="compensation_form" method="post">
     {% csrf_token %}
     Choose the competency level:
@@ -21,6 +23,8 @@
 
 Compensation is : 
 <div id="compensation_value"></div>
+
+<div id="plotly_json"></div>
 <script>
     $("#compensation_form").submit(function (event) {
       console.log($('[name="level"]').val());
@@ -45,8 +49,45 @@ Compensation is :
                     }, 
 
             // handle a successful response
-            success : function(data) {
-                $("#compensation_value").html(data);
+            success : function(raw) {
+                console.log("X=", raw.x);
+                console.log("Y=", raw.y);
+                var traceCEO = {
+                                    name: "CEO",
+                                    x: raw.years, 
+                                    y: raw.predceo,
+                                    mode: "lines+markers" 
+                                };
+
+                var traceVP = {
+                                  name: "VP",
+                                  x: raw.years,
+                                  y: raw.predvp,
+                                  mode: "lines+markers"          
+                              };
+
+                var traceLead = {
+                                    name: "Lead",
+                                    x: raw.years,
+                                    y: raw.predlead,
+                                    mode: "lines+markers"          
+                                };
+
+                var traceProf = {
+                                    name: "Prof",
+                                    x: raw.years,
+                                    y: raw.predprof,
+                                    mode: "lines+markers"          
+                                };
+
+
+                var data = [traceCEO, traceVP, traceLead, traceProf];
+                var layout = 
+                {
+                    title: "Delay for different levels for salary " + raw.salary,
+                };
+                Plotly.newPlot('plotly_json', data, layout);
+                $("#compensation_value").html(raw.delay);
             },
         });
     };

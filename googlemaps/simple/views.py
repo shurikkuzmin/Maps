@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader, Template, Context
 from django.core import serializers
 from django.template.loader import render_to_string
@@ -8,6 +8,7 @@ import urllib.request
 import json
 import pymorphy2
 import bs4
+import numpy
 from . import places
 from . import nominatim
 from . import lang
@@ -175,17 +176,37 @@ def process_compensation(request):
     years = request.POST['years']
     level = request.POST['level']
 
-    print("Salary = ", salary)
-    print("Years = ", years)
-    print("Level = ", level)
-    levels = ["ceo", "vp", "lead", "professional"]
+    years = int(years)
+    salary = float(salary)
+
+    levels = ["professional", "lead", "vp", "ceo"]
     level = levels.index(level)
 
     approximation = fit.Fit()
-    delay = approximation.predict(salary, years, level)
+    delay = approximation.predict([[salary, years, level]])
 
+    years2 = list(range(max(1, years - 5), years + 5))
+    salary2 = len(years2) * [salary]
+    levelceo = len(years2) * [4]
+    levelvp = len(years2) * [3]
+    levellead = len(years2) * [2]
+    levelprof = len(years2) * [1]
 
-    template = loader.get_template('simple/process_compensation.html')
-    context = {"Delay": delay[0]}
-    return HttpResponse(template.render(context, request))
+    dataceo = numpy.vstack([salary2, years2, levelceo]).transpose()
+    datavp = numpy.vstack([salary2, years2, levelvp]).transpose()
+    datalead = numpy.vstack([salary2, years2, levellead]).transpose()
+    dataprof = numpy.vstack([salary2, years2, levelprof]).transpose()
+
+    predceo = approximation.predict(dataceo)
+    predvp = approximation.predict(datavp)
+    predlead = approximation.predict(datalead)
+    predprof = approximation.predict(dataprof)
+
+    x = [0, 1, 2, 3]
+    y = [10, 22, 11, 15]
+
+    context = {"x": x, "y": y, "delay": delay[0], "years" : years2, "predceo": predceo.tolist(), "predvp": predvp.tolist(), "predlead": predlead.tolist(), "predprof": predprof.tolist(), 
+               "salary": salary}
+
+    return JsonResponse(context)
 

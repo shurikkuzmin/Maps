@@ -15,7 +15,5 @@ class Fit(object):
         self.model = model
         self.csv = csv
 
-    def predict(self, salary, years, position):
-
-        return self.model.predict(numpy.array([salary, years, position]).reshape(1, -1))
- 
+    def predict(self, data):
+        return self.model.predict(data)
