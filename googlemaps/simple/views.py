@@ -171,21 +171,12 @@ def compensation(request):
 
 
 def process_compensation(request):
-    
-    salary = request.POST['salary']
-    years = request.POST['years']
-    level = request.POST['level']
-
-    years = int(years)
-    salary = float(salary)
-
-    levels = ["professional", "lead", "vp", "ceo"]
-    level = levels.index(level)
 
     approximation = fit.Fit()
-    delay = approximation.predict([[salary, years, level]])
+    
+    salary = request.POST['salary']
 
-    years2 = list(range(max(1, years - 5), years + 5))
+    years2 = list(range(5, 25))
     salary2 = len(years2) * [salary]
     levelceo = len(years2) * [4]
     levelvp = len(years2) * [3]
@@ -202,10 +193,7 @@ def process_compensation(request):
     predlead = approximation.predict(datalead)
     predprof = approximation.predict(dataprof)
 
-    x = [0, 1, 2, 3]
-    y = [10, 22, 11, 15]
-
-    context = {"x": x, "y": y, "delay": delay[0], "years" : years2, "predceo": predceo.tolist(), "predvp": predvp.tolist(), "predlead": predlead.tolist(), "predprof": predprof.tolist(), 
+    context = {"years" : years2, "predceo": predceo.tolist(), "predvp": predvp.tolist(), "predlead": predlead.tolist(), "predprof": predprof.tolist(), 
                "salary": salary}
 
     return JsonResponse(context)

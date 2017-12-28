@@ -4,7 +4,7 @@
 </head>
 <form id="compensation_form" method="post">
     {% csrf_token %}
-    Choose the competency level:
+<!--     Choose the competency level:
     <select name="level">
         <option value="ceo">CEO/President</option>
         <option value="vp">VP</option>
@@ -12,13 +12,21 @@
         <option value="professional">Professional</option>
     </select>
     <br/>
-    Salary per year:
-    <input type="number" name="salary" value="70000"/>
     <br/>
     Years of service:
     <input type="number" name="years" value="10"/>
     <br/>
+ -->    
+    Salary per year:
+    <output name="amount" for="salary">70000</output>
+    <br/>
+    0
+    <input type="range" name="salary" min="0" max="200000" value="70000" oninput="amount.value=salary.value">
+    200000
+    <!-- </form> -->
+    <br/>    
     <input type="submit" value="Predict Compensation in Months">
+    <br/>
 </form>
 
 Compensation is : 
@@ -26,32 +34,25 @@ Compensation is :
 
 <div id="plotly_json"></div>
 <script>
-    $("#compensation_form").submit(function (event) {
-      console.log($('[name="level"]').val());
+    $("#compensation_form").change(function (event) {
       process_compensation();
       event.preventDefault();
     });
 
     function process_compensation()
     {
-        console.log("Level=", $('[name="level"]').val());
-        console.log("Salary=", $('[name="salary"]').val());
-        console.log("Salary=", $('[name="years"]').val());
+        console.log("Salary = ", $('[name="salary"]').val());
         $.ajax(
         {
             url : "{% url 'process-compensation' %}", 
             type : "POST",
             data : {    
-                        level : $('[name="level"]').val(),  
                         salary : $('[name="salary"]').val(),
-                        years : $('[name="years"]').val(),
                         csrfmiddlewaretoken: '{{csrf_token}}',
                     }, 
 
             // handle a successful response
             success : function(raw) {
-                console.log("X=", raw.x);
-                console.log("Y=", raw.y);
                 var traceCEO = {
                                     name: "CEO",
                                     x: raw.years, 
