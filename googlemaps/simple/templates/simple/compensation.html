@@ -16,23 +16,51 @@
     Years of service:
     <input type="number" name="years" value="10"/>
     <br/>
- -->    
-    Salary per year:
-    <output name="amount" for="salary">70000</output>
+ --> 
+    <div>
+        Minimum age:
+        <output name="min_age" for="min_range">40</output>
+        <br/>
+        30
+        <input type="range" name="min_range" min="30" max="80" value="40" oninput="min_age.value=min_range.value">
+        80
+    </div>
     <br/>
-    0
-    <input type="range" name="salary" min="0" max="200000" value="70000" oninput="amount.value=salary.value">
-    200000
-    <!-- </form> -->
-    <br/>    
-    <input type="submit" value="Predict Compensation in Months">
+    <div>
+        Maximum age:
+        <output name="max_age" for="max_range">50</output>
+        <br/>
+        30
+        <input type="range" name="max_range" min="30" max="80" value="50" oninput="max_age.value=max_range.value">
+        80
+    </div>
     <br/>
+    <div>
+        Years of service:
+        <output name="service" for="service_range">10</output>
+        <br/>
+        0
+        <input type="range" name="service_range" min="0" max="30" value="10" oninput="service.value=service_range.value">
+        30
+    </div>
+    <br/>
+    <div>
+        Salary per year:
+        <output name="salary" for="salary_range">70000</output>
+        <br/>
+        0
+        <input type="range" name="salary_range" min="0" max="200000" value="70000" oninput="salary.value=salary_range.value">
+        200000
+        <br/> 
+    </div>   
+<!--     <input type="submit" value="Predict Compensation in Months">
+    <br/>
+ -->
 </form>
 
-Compensation is : 
-<div id="compensation_value"></div>
+The delay range is in between : <span id="min_delay"></span> and <span id="max_delay"></span>
 
-<div id="plotly_json"></div>
+<!-- <div id="plotly_json"></div> -->
 <script>
     $("#compensation_form").change(function (event) {
       process_compensation();
@@ -41,54 +69,27 @@ Compensation is :
 
     function process_compensation()
     {
+        console.log("Min age = ", $('[name="min_age"]').val());
+        console.log("Max age = ", $('[name="max_age"]').val());
+        console.log("Service range = ", $('[name="service"]').val());
         console.log("Salary = ", $('[name="salary"]').val());
+
         $.ajax(
         {
             url : "{% url 'process-compensation' %}", 
             type : "POST",
             data : {    
+                        min_age: $('[name="min_age"]').val(),
+                        max_age: $('[name="max_age"]').val(),
+                        service: $('[name="service"]').val(),
                         salary : $('[name="salary"]').val(),
                         csrfmiddlewaretoken: '{{csrf_token}}',
                     }, 
 
             // handle a successful response
             success : function(raw) {
-                var traceCEO = {
-                                    name: "CEO",
-                                    x: raw.years, 
-                                    y: raw.predceo,
-                                    mode: "lines+markers" 
-                                };
-
-                var traceVP = {
-                                  name: "VP",
-                                  x: raw.years,
-                                  y: raw.predvp,
-                                  mode: "lines+markers"          
-                              };
-
-                var traceLead = {
-                                    name: "Lead",
-                                    x: raw.years,
-                                    y: raw.predlead,
-                                    mode: "lines+markers"          
-                                };
-
-                var traceProf = {
-                                    name: "Prof",
-                                    x: raw.years,
-                                    y: raw.predprof,
-                                    mode: "lines+markers"          
-                                };
-
-
-                var data = [traceCEO, traceVP, traceLead, traceProf];
-                var layout = 
-                {
-                    title: "Delay for different levels for salary " + raw.salary,
-                };
-                Plotly.newPlot('plotly_json', data, layout);
-                $("#compensation_value").html(raw.delay);
+                $("#min_delay").html(raw.val_min);
+                $("#max_delay").html(raw.val_max);
             },
         });
     };

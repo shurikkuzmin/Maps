@@ -127,8 +127,7 @@ def process_gazette(request):
     # Analyze url
 
     print(request.POST['url-montreal-gazette'])
-    #except:
-    #    pass
+
     template = loader.get_template('simple/process_gazette.html')
     context = {}
     return HttpResponse(template.render(context, request))
@@ -174,27 +173,16 @@ def process_compensation(request):
 
     approximation = fit.Fit()
     
+    min_age = request.POST["min_age"]
+    max_age = request.POST["max_age"]
+    service = request.POST['service']
     salary = request.POST['salary']
 
-    years2 = list(range(5, 25))
-    salary2 = len(years2) * [salary]
-    levelceo = len(years2) * [4]
-    levelvp = len(years2) * [3]
-    levellead = len(years2) * [2]
-    levelprof = len(years2) * [1]
+    val_min, val_max = approximation.predict(service, salary, min_age, max_age)
 
-    dataceo = numpy.vstack([salary2, years2, levelceo]).transpose()
-    datavp = numpy.vstack([salary2, years2, levelvp]).transpose()
-    datalead = numpy.vstack([salary2, years2, levellead]).transpose()
-    dataprof = numpy.vstack([salary2, years2, levelprof]).transpose()
+    #print("Val_min = ", val_min, "Val_max = ", val_max)
 
-    predceo = approximation.predict(dataceo)
-    predvp = approximation.predict(datavp)
-    predlead = approximation.predict(datalead)
-    predprof = approximation.predict(dataprof)
-
-    context = {"years" : years2, "predceo": predceo.tolist(), "predvp": predvp.tolist(), "predlead": predlead.tolist(), "predprof": predprof.tolist(), 
-               "salary": salary}
+    context = {"val_min" : val_min, "val_max": val_max}
 
     return JsonResponse(context)
 
