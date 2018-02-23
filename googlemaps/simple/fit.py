@@ -21,7 +21,7 @@ class Fit(object):
         self.model = model
         self.csv = csv
 
-    def predict(self, years, salary, min_age, max_age):
-        val1 = self.model.predict([[years, salary, min_age]])
-        val2 = self.model.predict([[years, salary, max_age]])
+    def predict(self, service, age, min_salary, max_salary):
+        val1 = self.model.predict([[service, min_salary, age]])
+        val2 = self.model.predict([[service, max_salary, age]])
         return min(val1[0], val2[0]), max(val1[0], val2[0])

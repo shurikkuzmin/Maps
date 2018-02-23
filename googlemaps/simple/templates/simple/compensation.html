@@ -1,38 +1,24 @@
 <head>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <form id="compensation_form" method="post">
     {% csrf_token %}
-<!--     Choose the competency level:
-    <select name="level">
-        <option value="ceo">CEO/President</option>
-        <option value="vp">VP</option>
-        <option value="lead">Team Leader</option>
-        <option value="professional">Professional</option>
-    </select>
-    <br/>
-    <br/>
-    Years of service:
-    <input type="number" name="years" value="10"/>
-    <br/>
- --> 
     <div>
-        Minimum age:
-        <output name="min_age" for="min_range">40</output>
+        Minimum salary:
+        <output name="min_salary" for="min_range">50000</output>
         <br/>
-        30
-        <input type="range" name="min_range" min="30" max="80" value="40" oninput="min_age.value=min_range.value">
-        80
+        0
+        <input type="range" name="min_range" min="0" max="200000" value="50000" oninput="min_salary.value=min_range.value">
+        200000
     </div>
     <br/>
     <div>
-        Maximum age:
-        <output name="max_age" for="max_range">50</output>
+        Maximum salary:
+        <output name="max_salary" for="max_range">70000</output>
         <br/>
-        30
-        <input type="range" name="max_range" min="30" max="80" value="50" oninput="max_age.value=max_range.value">
-        80
+        0
+        <input type="range" name="max_range" min="0" max="200000" value="70000" oninput="max_salary.value=max_range.value">
+        200000
     </div>
     <br/>
     <div>
@@ -45,17 +31,14 @@
     </div>
     <br/>
     <div>
-        Salary per year:
-        <output name="salary" for="salary_range">70000</output>
+        Age:
+        <output name="age" for="age_range">40</output>
         <br/>
-        0
-        <input type="range" name="salary_range" min="0" max="200000" value="70000" oninput="salary.value=salary_range.value">
-        200000
+        20
+        <input type="range" name="age_range" min="20" max="80" value="40" oninput="age.value=age_range.value">
+        80
         <br/> 
     </div>   
-<!--     <input type="submit" value="Predict Compensation in Months">
-    <br/>
- -->
 </form>
 
 The delay range is in between : <span id="min_delay"></span> and <span id="max_delay"></span>
@@ -69,20 +52,20 @@ The delay range is in between : <span id="min_delay"></span> and <span id="max_d
 
     function process_compensation()
     {
-        console.log("Min age = ", $('[name="min_age"]').val());
-        console.log("Max age = ", $('[name="max_age"]').val());
+        console.log("Min salary = ", $('[name="min_salary"]').val());
+        console.log("Max salary = ", $('[name="max_salary"]').val());
         console.log("Service range = ", $('[name="service"]').val());
-        console.log("Salary = ", $('[name="salary"]').val());
+        console.log("Age = ", $('[name="age"]').val());
 
         $.ajax(
         {
             url : "{% url 'process-compensation' %}", 
             type : "POST",
             data : {    
-                        min_age: $('[name="min_age"]').val(),
-                        max_age: $('[name="max_age"]').val(),
+                        min_salary: $('[name="min_salary"]').val(),
+                        max_salary: $('[name="max_salary"]').val(),
                         service: $('[name="service"]').val(),
-                        salary : $('[name="salary"]').val(),
+                        age : $('[name="age"]').val(),
                         csrfmiddlewaretoken: '{{csrf_token}}',
                     }, 
 

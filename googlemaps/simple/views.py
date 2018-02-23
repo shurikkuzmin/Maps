@@ -173,12 +173,12 @@ def process_compensation(request):
 
     approximation = fit.Fit()
     
-    min_age = request.POST["min_age"]
-    max_age = request.POST["max_age"]
+    min_salary = request.POST["min_salary"]
+    max_salary = request.POST["max_salary"]
     service = request.POST['service']
-    salary = request.POST['salary']
+    age = request.POST['age']
 
-    val_min, val_max = approximation.predict(service, salary, min_age, max_age)
+    val_min, val_max = approximation.predict(service, age, min_salary, max_salary)
 
     #print("Val_min = ", val_min, "Val_max = ", val_max)
 
