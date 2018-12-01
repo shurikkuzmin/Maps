@@ -1,79 +1,131 @@
-<head>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-</head>
-<form id="compensation_form" method="post">
-    {% csrf_token %}
-    <div>
-        Minimum salary:
-        <output name="min_salary" for="min_range">50000</output>
-        <br/>
-        0
-        <input type="range" name="min_range" min="0" max="200000" value="50000" oninput="min_salary.value=min_range.value">
-        200000
-    </div>
-    <br/>
-    <div>
-        Maximum salary:
-        <output name="max_salary" for="max_range">70000</output>
-        <br/>
-        0
-        <input type="range" name="max_range" min="0" max="200000" value="70000" oninput="max_salary.value=max_range.value">
-        200000
-    </div>
-    <br/>
-    <div>
-        Years of service:
-        <output name="service" for="service_range">10</output>
-        <br/>
-        0
-        <input type="range" name="service_range" min="0" max="30" value="10" oninput="service.value=service_range.value">
-        30
-    </div>
-    <br/>
-    <div>
-        Age:
-        <output name="age" for="age_range">40</output>
-        <br/>
-        20
-        <input type="range" name="age_range" min="20" max="80" value="40" oninput="age.value=age_range.value">
-        80
-        <br/> 
-    </div>   
-</form>
+{% load static %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-The delay range is in between : <span id="min_delay"></span> and <span id="max_delay"></span>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        
+        <link href="{% static 'simple/cover.css' %}" rel="stylesheet">
+    </head>
+    <body class="text-center">
 
-<!-- <div id="plotly_json"></div> -->
-<script>
-    $("#compensation_form").change(function (event) {
-      process_compensation();
-      event.preventDefault();
-    });
+        <div class="cover">
+            <div class="cover-heading">
+                Calculate your compensation
+            </div>
+            <div class="cover-container">
+                Please enter the salary, years spent on the latest workplace and your age to calculate the compensation in number of weeks in case you are fired or laid off.
+            </div>
+            <p class="lead">
+              <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
+            </p>
+        </div>
+        <div class="container-fluid">
+            <form class="main-form" id="compensation_form" method="post">
+                {% csrf_token %}
+                <div class="form-group row" >
+                    <div class="col text-right">
+                        Enter the minimum salary
+                    </div>
+                    <div class="col-sm-2 text-center">
+                        <input name="min_salary" min="0" max="200000" for="min_range" value="50000" oninput="min_range.value=min_salary.value"></input>
+                    </div>
+                    <div class="col text-left">
+                        or drag the slider <b>0</b>
+                        <input type="range" name="min_range" min="0" max="200000" value="50000" oninput="min_salary.value=min_range.value"/>
+                        <b>200000</b>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col text-right">
+                        Enter the maximum salary
+                    </div>
+                    <div class="col-sm-2 text-center">
+                        <input name="max_salary" min="0" max="200000" for="max_range" value="70000" oninput="max_range.value=max_salary.value"></input> 
+                    </div>
+                    <div class="col text-left">
+                        or drag the slider  <b>0</b>
+                        <input type="range" name="max_range" min="0" max="200000" value="70000" oninput="max_salary.value=max_range.value">
+                        <b>200000</b>
+                    </div>
+                </div>  
+                <div class="form-group row">
+                    <div class="col text-right">
+                        Enter years of service
+                    </div>
+                    <div class="col-sm-2 text-center">
+                        <input name="service" value="10" for="service_range" oninput="service_range.value = service.value"></input> 
+                    </div>
+                    <div class="col text-left">
+                        or drag the slider  <b>0</b>
+                        <input type="range" name="service_range" min="0" max="30" value="10" oninput="service.value=service_range.value" /> <b>30</b>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col text-right">
+                        Enter age in years 
+                    </div>
+                    <div class="col-sm-2 text-center">
+                        <input name="age" for="age_range" value="20" oninput="age_range.value = age.value" />
+                    </div>
+                    <div class="col text-left">
+                        or drag the slider  <b>20</b>
+                        <input type="range" name="age_range" min="20" max="80" value="40" oninput="age.value=age_range.value">
+                        <b>80</b>
+                    </div>
+                </div>
+            </form>
+            <div class="well">
+                The delay range is in between : from <span id="min_delay" class="col-xs-1"></span> to <span id="max_delay" class="col-xs-1"></span> weeks
+            </div>
+        </div>
 
-    function process_compensation()
-    {
-        console.log("Min salary = ", $('[name="min_salary"]').val());
-        console.log("Max salary = ", $('[name="max_salary"]').val());
-        console.log("Service range = ", $('[name="service"]').val());
-        console.log("Age = ", $('[name="age"]').val());
 
-        $.ajax(
-        {
-            url : "{% url 'process-compensation' %}", 
-            type : "POST",
-            data : {    
-                        min_salary: $('[name="min_salary"]').val(),
-                        max_salary: $('[name="max_salary"]').val(),
-                        service: $('[name="service"]').val(),
-                        age : $('[name="age"]').val(),
-                        csrfmiddlewaretoken: '{{csrf_token}}',
-                    }, 
+        <!-- <div id="plotly_json"></div> -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-            // handle a successful response
-            success : function(raw) {
-                $("#min_delay").html(raw.val_min);
-                $("#max_delay").html(raw.val_max);
-            },
-        });
-    };
-</script>
+        <script>
+            $("#compensation_form").init(function (event) {
+              process_compensation();
+              event.preventDefault();
+            });
+
+            $("#compensation_form").change(function (event) {
+              process_compensation();
+              event.preventDefault();
+            });
+
+            function process_compensation()
+            {
+                console.log("Min salary = ", $('[name="min_salary"]').val());
+                console.log("Max salary = ", $('[name="max_salary"]').val());
+                console.log("Service range = ", $('[name="service"]').val());
+                console.log("Age = ", $('[name="age"]').val());
+
+                $.ajax(
+                {
+                    url : "{% url 'process-compensation' %}", 
+                    type : "POST",
+                    data : {    
+                                min_salary: $('[name="min_salary"]').val(),
+                                max_salary: $('[name="max_salary"]').val(),
+                                service: $('[name="service"]').val(),
+                                age : $('[name="age"]').val(),
+                                csrfmiddlewaretoken: '{{csrf_token}}',
+                            }, 
+
+                    // handle a successful response
+                    success : function(raw) {
+                        $("#min_delay").html(raw.val_min.toString().substr(0,5));
+                        $("#max_delay").html(raw.val_max.toString().substr(0,5));
+                    },
+                });
+            };
+        </script>
+    </body>
+</html>
